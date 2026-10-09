@@ -8,13 +8,43 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(cuid())
-  discordId String   @unique
+  id        String        @id @default(cuid())
+  discordId String        @unique
   name      String
   email     String?
   image     String?
-  tokens    Int      @default(25)
+  tokens    Int           @default(25)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  assets    AssetRecord[]
+  ledger    TokenLedger[]
+  aiUsage   AIUsage[]
+}
+
+model AssetRecord {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @json.ignore @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+}
+
+model TokenLedger {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+model AIUsage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  dayKey    String
+  count     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  // dan model-model selanjutnya...
+
+  @@unique([userId, dayKey])
 }
