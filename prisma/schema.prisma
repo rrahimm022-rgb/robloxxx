@@ -1,46 +1,20 @@
-generator client { provider = "prisma-client-js" }
-datasource db { provider = "postgresql" url = env("DATABASE_URL") }
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model User {
-  id String @id @default(cuid())
-  discordId String @unique
-  name String
-  email String?
-  image String?
-  tokens Int @default(25)
+  id        String   @id @default(cuid())
+  discordId String   @unique
+  name      String
+  email     String?
+  image     String?
+  tokens    Int      @default(25)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  assets AssetRecord[]
-  ledger TokenLedger[]
-  aiUsage AIUsage[]
-}
-model AssetRecord {
-  id String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  assetId String?
-  name String
-  description String @default("")
-  assetType String
-  fileName String
-  status String @default("submitted")
-  createdAt DateTime @default(now())
-  @@index([userId, createdAt])
-}
-model TokenLedger {
-  id String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  amount Int
-  reason String
-  actorDiscordId String?
-  createdAt DateTime @default(now())
-  @@index([userId, createdAt])
-}
-model AIUsage {
-  id String @id @default(cuid())
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  dayKey String
-  count Int @default(0)
-  @@unique([userId, dayKey])
+  // dan model-model selanjutnya...
 }
